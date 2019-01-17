@@ -31,13 +31,13 @@ namespace TodoApi
                 c.SwaggerDoc("v1", new Info {
                     Title = "Todo Api",
                     Version = "v1",
-                    Description = "A simple Web ap for bild",
+                    Description = "A simple Web app for bild",
                     TermsOfService = "None",
                     Contact = new Contact
                     {
-                        Name = "DejanJaredic",
+                        Name = "Dejan Jaredic",
                         Email = string.Empty,
-                        Url = "https://twitter.com/spboyer"
+                        Url = "https://jaredicdejan.com"
                     },
                     License = new License
                     {
