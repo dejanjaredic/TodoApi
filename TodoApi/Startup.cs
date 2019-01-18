@@ -9,6 +9,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using System.Reflection;
 using System.IO;
 using System;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace TodoApi
 {
@@ -28,7 +29,8 @@ namespace TodoApi
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info {
+                c.SwaggerDoc("v1", new Info
+                {
                     Title = "Todo Api",
                     Version = "v1",
                     Description = "A simple Web app for bild",
@@ -51,6 +53,7 @@ namespace TodoApi
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,6 +78,16 @@ namespace TodoApi
             app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseMvc();
+            app.UseMvc(routes =>
+            {
+                /*routes.MapAreaRoute("test", "test/{*listall}",
+                    defaults: new  { controller = "Test", action = "ListAll"});*/
+               //routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}"); 
+                
+            });
+            // OR app.UseMvcWithDefaultRoute()
+
+
         }
     }
 }

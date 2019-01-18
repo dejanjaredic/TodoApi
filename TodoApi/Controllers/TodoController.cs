@@ -11,7 +11,7 @@ using TodoApi.Models;
 namespace TodoApi.Controllers
 {
     [Produces("application/json")]
-    [Route("/todo")]
+    [Route("api/todo")]
     [ApiController]
     public class TodoController : Controller
     {
@@ -29,11 +29,20 @@ namespace TodoApi.Controllers
             
 
         }
+        /// <summary>
+        /// Get item 
+        /// </summary>
+        /// <returns>json</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodoItem()
         {
             return await _context.TodoItems.ToListAsync();
         }
+        /// <summary>
+        /// get item with id
+        /// </summary>
+        /// <param name="id">id </param>
+        /// <returns>json</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<TodoItem>> GetTodoItem(long id)
         {
@@ -44,6 +53,11 @@ namespace TodoApi.Controllers
             }
             return todoItem;
         }
+        /// <summary>
+        /// Create new item and put in database
+        /// </summary>
+        /// <param name="todoItem">Item Name</param>
+        /// <returns>Item</returns>
         [HttpPost]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
@@ -54,6 +68,12 @@ namespace TodoApi.Controllers
             return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
         }
 
+        /// <summary>
+        /// Using for Editing Items in database
+        /// </summary>
+        /// <param name="id">id of item</param>
+        /// <param name="todoItem">New Name</param>
+        /// <returns>new name</returns>
         [HttpPut("{id}")]
         public async Task<ActionResult> PutTodoItem(long id, TodoItem todoItem)
         {
@@ -65,7 +85,11 @@ namespace TodoApi.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
-
+        /// <summary>
+        /// Delete Item from Database
+        /// </summary>
+        /// <param name="id">id of item</param>
+        /// <returns>id</returns>
         [HttpDelete("{id}")]
         public async Task<ActionResult<TodoItem>> DeleteTodoItem(long id)
         {
