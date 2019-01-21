@@ -38,11 +38,14 @@ namespace TodoApi.Controllers
         /// <param name="name">The first name to search</param>
         /// <param name="surname">Second Name for searching</param>
         /// <returns>ame and surname</returns>
-        [HttpGet("Name/{name}/surname{surname}", Name = "My_Stuff")]
+        [HttpGet("Person/{name}/{surname}", Name = "My_Stuff")]
         public string GetName(string name, string surname)
         {
             
-            return "My name is " + " " + name + " and my surname is " + surname;
+                return "My name is " + " " + name + " and my surname is " + surname;
+            
+           
+            
         }
         /// <summary>
         /// This Will return List using [actoin] simple demonstration app
@@ -58,13 +61,26 @@ namespace TodoApi.Controllers
         /// <summary>
         /// This is for edit and you have id to put in 
         /// </summary>
-        /// <param name="id">Id parameta must be number</param>
+        /// <param name="id">Id parameter must be number</param>
         /// <returns>return number of Id</returns>
         [HttpGet]
         [Route("[action]/{id}")]
-        public ContentResult Edit(int id)
+        public string Edit(int id)
         {
-            return Content("Bring id" + " " + id);
+            
+            return "Bring id" + " " + id;
+        }
+
+        /// <summary>
+        /// Insert id for editing
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns>string with id</returns>
+        [HttpGet]
+        [Route("products/{id}")]
+        public string GetProductId(int? id)
+        {
+            return id == null ? " Please enter the id " : "The id is " + id;
         }
     }
 }
