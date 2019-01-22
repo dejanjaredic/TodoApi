@@ -81,10 +81,11 @@ namespace TodoApi
             app.UseMvc();
             app.UseMvc(routes =>
             {
-                /*routes.MapAreaRoute("test", "test/{*listall}",
-                    defaults: new  { controller = "Test", action = "ListAll"});*/
-               //routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}"); 
-                
+                /*
+                routes.MapRoute("pretraga", "pretraga/{val1}/{val2}",
+                    defaults: new { controller = "Zadatak", action = "" });
+                routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
+                */
             });
             // OR app.UseMvcWithDefaultRoute()
 
