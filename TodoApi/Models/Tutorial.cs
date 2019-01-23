@@ -39,8 +39,8 @@ namespace TodoApi.Models
         {
             return Name;
         }
-        
-        
+
+
     }
     /// <summary>
     /// Class Guru99Tutorijal nasljeduje property klasse Tutorijal

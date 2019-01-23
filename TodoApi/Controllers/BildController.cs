@@ -12,13 +12,7 @@ namespace TodoApi.Controllers
     [Route("api/")]
     public class BildController : Controller
     {
-        /*
-        [HttpGet]
-        public IEnumerable<string> GetBild()
-        {
-            return new string[] {"bild value1", "bild value2" };
-        }
-        */
+        
         /// <summary>
         /// Index method using diferrent paths
         /// </summary>
@@ -52,15 +46,6 @@ namespace TodoApi.Controllers
             return Content("Index Content");
         }
         
-    
-        /*
-        private readonly TodoContext _context;
-
-        public BildController(TodoContext context)
-        {
-            _context = context;
-        }
-        */
 
     }
 }

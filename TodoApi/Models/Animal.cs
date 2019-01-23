@@ -22,7 +22,7 @@ namespace TodoApi.Models
      * tek kad saznamo koja ce zivotinja to da bude onda se definise nova klasa koja nasljedjuje klasu zivotinja
      * poenta je u tome sto ova klasa ne moze da mijenja metod klase zivotinja, vec definise svoj sopstveni
      */
-     class Dog : Animal //Klasa koja nasledjuje sve iz Animal klase
+      class Dog : Animal //Klasa koja nasledjuje sve iz Animal klase
     {
         protected int Id { get; set; }
         protected string Description { get; set; }
