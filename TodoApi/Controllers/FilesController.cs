@@ -50,8 +50,7 @@ namespace TodoApi.Controllers
 
         
         /// <summary>
-        /// Metoda koja provjerava dal dati fajl postoji i vraca povratni string u zavisnosti dal postoji il ne
-        /// ime fajla je test.txt
+        /// Metoda koja provjerava dal dati fajl postoji, ako ne postoji onda ga kreira na desktop
         /// </summary>
         /// <returns>string</returns>
         [HttpGet("file/{filename}")]
@@ -73,7 +72,7 @@ namespace TodoApi.Controllers
             return "Not created";
         }
         /// <summary>
-        /// Metoda za citanje sadrzaja iz test.txt fajla liniju po liniju preko foreach petlje
+        /// Metoda za citanje sadrzaja iz zadatog  fajla liniju po liniju preko foreach petlje
         /// </summary>
         /// <returns>string</returns>
         [HttpGet("readfileline")]
