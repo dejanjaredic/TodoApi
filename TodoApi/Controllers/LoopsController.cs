@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace TodoApi.Controllers
 {
     [Route("api/[controller]")]
-    public class BasicsController : Controller
+    public class LoopsController : Controller
     {
         /// <summary>
         /// Provjeravanje if petlje

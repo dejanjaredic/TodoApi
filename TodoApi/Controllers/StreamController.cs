@@ -21,7 +21,7 @@ namespace TodoApi.Controllers
         [HttpGet("sream/{filename}")]
         public string SreamRead(string filename)
         {
-            string path = @"C:\Users\Bild081\Desktop\" + filename+".txt";
+            string path = @"C:\Users\Bild081\AppData\Local\Temp\Projects\" + filename+".txt";
             string result = "";
             using (StreamReader sr = System.IO.File.OpenText(path))
             {
@@ -45,14 +45,14 @@ namespace TodoApi.Controllers
         public string WriteStream(string filename, string text)
         {
             string myText = text;
-            string path = @"C:\Users\Bild081\Desktop\" + filename + ".txt";
+            string path = @"C:\Users\Bild081\AppData\Local\Temp\Projects\" + filename + ".txt";
             using (StreamWriter sr = System.IO.File.AppendText(path))
             {
                 sr.WriteLine(myText);
                 sr.Close();
             }
 
-            string path2= @"C:\Users\Bild081\Desktop\" + filename+".txt";
+            string path2= @"C:\Users\Bild081\AppData\Local\Temp\Projects\" + filename+".txt";
             string lines;
             lines = System.IO.File.ReadAllText(path2);
 

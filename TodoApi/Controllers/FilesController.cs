@@ -12,12 +12,12 @@ namespace TodoApi.Controllers
     [Route("api/[controller]")]
     public class Files : Controller
     {
-        /*
+        
         [HttpGet("folderexist")]
         public string FolderExist()
         {
             
-            string path = @"C:\temp";
+            string path = @"C:\Users\Bild081\AppData\Local\Temp\Projects";
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
@@ -25,10 +25,10 @@ namespace TodoApi.Controllers
             }
             else
             {
-                return "Folder are created allready";
+                return "Folder was created before";
             }
         }
-        */
+        
         /*
         [HttpGet("filecreate/{name}")]
         public string CreateFile(string name)
@@ -47,7 +47,17 @@ namespace TodoApi.Controllers
             return path;
         }
         */
+        
+        [HttpGet]
+        public bool CheckFileExist(string path)
+        {
+            if (!System.IO.File.Exists(path))
+            {
+                return false;
+            }
 
+            return true;
+        }
         
         /// <summary>
         /// Metoda koja provjerava dal dati fajl postoji, ako ne postoji onda ga kreira na desktop
@@ -57,29 +67,27 @@ namespace TodoApi.Controllers
         public string FExist(string filename)
         {
 
-            string path = @"C:\Users\Bild081\Desktop\" + filename+".txt";
-            if (System.IO.File.Exists(path))
+            string path = @"C:\Users\Bild081\AppData\Local\Temp\Projects\" + filename+".txt";
+            if (CheckFileExist(path))
             {
-                return "File exist";
+                return "exist";
             }
-            else
-            {
-                System.IO.File.Create(path);
-                return "Created";
-            }
-
-
-            return "Not created";
+            System.IO.File.Create(path);
+            return "Created";
         }
         /// <summary>
         /// Metoda za citanje sadrzaja iz zadatog  fajla liniju po liniju preko foreach petlje
         /// </summary>
         /// <returns>string</returns>
-        [HttpGet("readfileline")]
-        public string ReadFileLine()
+        [HttpGet("readfileline/{file}")]
+        public string ReadFileLine(string file)
         {
-            string path = @"C:\Users\Bild081\Desktop\test.txt";
-
+           
+            string path = $@"C:\Users\Bild081\AppData\Local\Temp\Projects\{file}.txt";
+            if (!CheckFileExist(path))
+            {
+                return "not exist";
+            }
             string[] lines;
             string result = "";
             lines = System.IO.File.ReadAllLines(path);
@@ -95,10 +103,14 @@ namespace TodoApi.Controllers
         /// Metoda cita kopletan text iz fajla pomocu System.IO.File.ReadAllText(path)
         /// </summary>
         /// <returns>string</returns>
-        [HttpGet("readetext")]
-        public string DeadAllFromFile()
+        [HttpGet("readetext/{file}")]
+        public string DeadAllFromFile(string file)
         {
-            string path = @"C:\Users\Bild081\Desktop\test.txt";
+            string path = @"C:\Users\Bild081\AppData\Local\Temp\Projects\"+file+".txt";
+            if (!CheckFileExist(path))
+            {
+                return "not exist";
+            }
             string lines;
             lines = System.IO.File.ReadAllText(path);
 
@@ -109,11 +121,15 @@ namespace TodoApi.Controllers
         /// </summary>
         /// <param name="filename">ime novog fajla</param>
         /// <returns>string</returns>
-        [HttpGet("copyfile/{filename}")]
-        public string CopyTheFile(string filename)
+        [HttpGet("copyfile/{filename}/{filecopy}")]
+        public string CopyTheFile(string filename, string filecopy)
         {
-            string path = @"C:\Users\Bild081\Desktop\test.txt";
-            string copypath = @"C:\Users\Bild081\Desktop\" + filename+".txt";
+            string path = @"C:\Users\Bild081\AppData\Local\Temp\Projects\"+ filename + ".txt";
+            if (!CheckFileExist(path))
+            {
+                return "not exist";
+            }
+            string copypath = @"C:\Users\Bild081\AppData\Local\Temp\Projects\" + filecopy + ".txt";
 
             System.IO.File.Copy(path, copypath);
 
@@ -127,11 +143,29 @@ namespace TodoApi.Controllers
         [HttpGet("filedelete/{filename}")]
         public string FileDelete(string filename)
         {
-            string path = @"C:\Users\Bild081\Desktop\" + filename + ".txt";
+            string path = @"C:\Users\Bild081\AppData\Local\Temp\Projects\" + filename + ".txt";
+            if (!CheckFileExist(path))
+            {
+                return "not exist";
+            }
             System.IO.File.Delete(path);
 
             return "File is deleted";
         }
+
+        [HttpGet("debager/{val}")]
+        public string DebugerExampleMetod(string val)
+        {
+            string path = @"C:\Users\Bild081\AppData\Local\Temp\Projects\" + val + ".txt";
+            if (!CheckFileExist(path))
+            {
+                return "not exist";
+            }
+
+            return "File exist";
+        }
+
+       
 
 
     }

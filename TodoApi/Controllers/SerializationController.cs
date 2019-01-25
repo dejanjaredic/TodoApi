@@ -30,12 +30,12 @@ namespace TodoApi.Controllers
             obj.Name = "Dejan";
 
             IFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream("C:\\Users\\Bild081\\Desktop\\"+filename+".txt", FileMode.Create, FileAccess.Write);
+            Stream stream = new FileStream(@"C:\Users\Bild081\AppData\Local\Temp\Projects\" + filename+".txt", FileMode.Create, FileAccess.Write);
 
             formatter.Serialize(stream, obj);
             stream.Close();
 
-            stream = new FileStream("C:\\Users\\Bild081\\Desktop\\"+filename+".txt", FileMode.Open, FileAccess.Read);
+            stream = new FileStream(@"C:\Users\Bild081\AppData\Local\Temp\Projects\" + filename+".txt", FileMode.Open, FileAccess.Read);
             Serialization objnew = (Serialization) formatter.Deserialize(stream);
 
             return objnew.Id.ToString() + " " + objnew.Name;
