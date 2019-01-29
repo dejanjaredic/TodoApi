@@ -449,11 +449,49 @@ namespace TodoApi.Controllers
 
 
         }
-        /*
-        [HttpGet("jobs")]
+        
+        [HttpGet("jobsgroups")]
         public IActionResult GetPersonJobs()
         {
+            var persons = _context.Zadataks;
+            var jobs = _context.PersonJobs;
 
+            var lambdaQuery = jobs.Join(persons, x => x.Id, x => x.JobId,
+                    (job, person) => new {Job = job.Job, Person = person.Name + " " + person.Prezime})
+                .GroupBy(x => x.Job)
+                .Select(x => new
+                    {Job = x.Key, Users = x.Select(user => user.Person)});
+
+            ////var groupQuery =
+            ////    from job in jobs
+            ////    join person in persons on job.Id equals person.JobId
+            ////    let jobPerson = new  {Job = job, Person = person }
+            ////    group jobPerson by jobPerson.Job.Job
+            ////    into myJob
+            ////    select new
+            ////    {
+            ////        JobGroup = myJob.Key, Person = from i in myJob
+            ////            select i.Person.Name
+            ////    };
+
+            return Ok(lambdaQuery.ToList());
+        }
+        /*
+        int prvaFunkcija(PersonJob x)
+        {
+            return x.Id;
+        }
+
+        public class PovratnaInfo
+        {
+            public string Job { get; set; }
+            public string Person { get; set; }
+        }
+
+        PovratnaInfo DrugaFunkcija(PersonJob job, Zadatak person)
+        {
+            return new PovratnaInfo
+                {Job = job.Job, Person = person.Name + " " + person.Prezime};
         }
         */
     }
