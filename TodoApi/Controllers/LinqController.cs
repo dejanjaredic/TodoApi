@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -38,16 +40,13 @@ namespace TodoApi.Controllers
             {
                 result += i + "\n";
             }
-
             return result;
         }
 
         [HttpGet("getall")]
         public string  GetAllData()
         {
-
             string result = "";
-
             string[] peoples= new string[]{"Dejan", "Marko", "Zana", "Dajana"};
 
             IEnumerable<string> queryPeople =
@@ -59,7 +58,6 @@ namespace TodoApi.Controllers
             {
                 result += i + "\n";
             }
-
             return result;
         }
 
@@ -78,7 +76,6 @@ namespace TodoApi.Controllers
             {
                 result += n + "\n";
             }
-
             return result;
         }
 
@@ -89,9 +86,8 @@ namespace TodoApi.Controllers
             IEnumerable<int> numbersQuery =
                 from number in numbers
                 select number;
-
+    
             int getCountNumber = numbersQuery.Count();
-
             return getCountNumber;
         }
 
@@ -106,26 +102,11 @@ namespace TodoApi.Controllers
                 select score;
 
             int highScore = scoreQuery.Max();
-
-
             return highScore;
         }
         
         
-        [HttpGet("getlist")]
-        public async Task<ActionResult<IEnumerable<Zadatak>>> GetPersons()
-        {
-            var zadatak = await _context.Zadataks.ToListAsync();
-
-            IEnumerable<Zadatak> zadatakQuery =
-                from z in zadatak
-                select z;
-
-           
-
-           return zadatakQuery.ToList();
-
-        }
+        
 
         [HttpGet("citytest/{name}")]
         public List<String> GetCity(string name)
@@ -216,14 +197,265 @@ namespace TodoApi.Controllers
                 from c in city
                 where c.Name == "Herceg Novi"
                 select new {Population = c.Population};
-                
-            
 
             return Ok(cities.ToList());
         }
 
+        [HttpGet("simplelambda/{val}")]
+        public string SimpeLambda(int val)
+        {
+            int[] scores = {34, 65, 76, 23, 65, 98, 95, 34, 89};
+
+            int highScore = scores.Where(n => n > val).Count();
+            return highScore + "\n";
+        }
+        /// <summary>
+        /// Metod za izlistavanje svih osoba sa svim parametrima iz baze podataka
+        /// </summary>
+        /// <returns>list</returns>
+        [HttpGet("getlist")]
+        public async Task<ActionResult<IEnumerable<Zadatak>>> GetPersons()
+        {
+            var zadatak = await _context.Zadataks.ToListAsync();
+            IEnumerable<Zadatak> zadatakQuery =
+                from z in zadatak
+                select z;
+            return zadatakQuery.ToList();
+        }
+        /// <summary>
+        /// Metod za pronalazenje osobe po odredjenom Id-ju
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("examle1/{id}")]
+        public IActionResult GetExampleById(int id)
+        {
+            
+            var person = _context.Zadataks.ToList();
+            IEnumerable<Zadatak> personQuery =
+                from p in person
+                where p.Id == id
+                select p;
+
+            return Ok(personQuery.ToList());
+
+        }
+
+        [HttpPut("exampleedit/{id}")]
+        public IActionResult EditPersonById(int id, Zadatak input)
+        {
+            //var person = _context.Zadataks.ToList();
+             _context.Entry(input).State = EntityState.Modified;
+            _context.SaveChanges();
+
+            return NoContent();
+
+        }
+        /// <summary>
+        /// Akcija za pretragu po imenu i prezimenu
+        /// </summary>
+        /// <param name="name">name</param>
+        /// <param name="surname">surname</param>
+        /// <returns>list</returns>
+        [HttpGet("getbyname/{name}/{surname}")]
+        public IActionResult GetPersonByName(string name, string surname)
+        {
+            var person = _context.Zadataks.ToList();
+            var personQuery =
+                from p in person
+                where p.Name == name && p.Prezime == surname
+                select p;
+
+            return Ok(personQuery.ToList());
+        }
+        /// <summary>
+        /// Akcija sluzi da pronadje datu osobu po njenoj email adresi
+        /// </summary>
+        /// <param name="email">email</param>
+        /// <returns>list</returns>
+        [HttpGet("getbyemail/{email}")]
+        public IActionResult GetByEmail(string email)
+        {
+            var person = _context.Zadataks.ToList();
+            var personQuery =
+                from p in person
+                where p.Email == email
+                select p;
+
+            return Ok(personQuery.ToList());
+        }
+        /// <summary>
+        /// Akcija za pretragu osobe po njenom datumu i mjestu rodjenja
+        /// </summary>
+        /// <param name="date">date</param>
+        /// <param name="place">place</param>
+        /// <returns>List</returns>
+        [HttpGet("getbydate/{date}/{place}")]
+        public IActionResult GetByDateOfBirthday(DateTime date, string place)
+        {
+            var person = _context.Zadataks.ToList();
+            var personQuery =
+                from p in person
+                where p.DatumRodjenja == date && p.MjestoRodjenja == place
+                select p;
+
+            return Ok(personQuery.ToList());
+        }
+        /// <summary>
+        /// Akcija za pretragu osoba po datumu rodjenja
+        /// </summary>
+        /// <param name="date">date</param>
+        /// <returns>list</returns>
+        [HttpGet("getdate/{date}")]
+        public IActionResult GetByDate(DateTime date)
+        {
+            var person = _context.Zadataks.ToList();
+            var personQuery =
+                from p in person
+                where p.DatumRodjenja == date
+                select p;
+
+            return Ok(personQuery.ToList());
+        }
+        /// <summary>
+        /// Grupisanje osoba po mjestu rodjenja
+        /// </summary>
+        /// <returns>list</returns>
+        [HttpGet("groups")]
+        public IActionResult GroupingPersons()
+        {
+           
+            var person = _context.Zadataks.ToList();
+            var personQuery =
+                from p in person
+                group p by p.MjestoRodjenja;
+
+            foreach (var x in personQuery)
+            {
+                Debug.WriteLine(x.Key);
+                foreach (var y in x)
+                {
+                    Debug.WriteLine(y.Name);
+                }
+            }
+
+            return Ok(personQuery.ToList());
+        }
+        /// <summary>
+        /// izbacuje imena kojih ima vise od broja koji unesemo 
+        /// </summary>
+        /// <param name="val">list</param>
+        /// <returns></returns>
+        [HttpGet("grups2/{val}")]
+        public IActionResult GroupingPersons2(int val)
+        {
+            var person = _context.Zadataks.ToList();
+            var personQuery =
+                from p in person
+                group p by p.Name
+                into personName
+                where personName.Count() > val
+                orderby personName.Key
+                select personName;
+
+            return Ok(personQuery.ToList());
+        }
+        /// <summary>
+        /// iscitavanje podataka iz classe PersonJob
+        /// </summary>
+        /// <returns>llist</returns>
+        [HttpGet("readfromjob")]
+        public IActionResult GetJobs()
+        {
+            var jobs = _context.PersonJobs.ToList();
+            var jobsQuery =
+                from job in jobs
+                select job;
+            return Ok(jobsQuery.ToList());
+        }
+        /// <summary>
+        /// primjer pridruzivanja dvije tabele po mjestu rodjenja i gradu u kojem se nalazi posao, ako se podudaraju mjesto rodjenja i grad onda se toj osobi dodjeljuje taj posao
+        /// </summary>
+        /// <returns>list</returns>
+        [HttpGet("joinexample")]
+        public IActionResult JoinExample()
+        {
+            var persons = _context.Zadataks.ToList();
+            var jobs = _context.PersonJobs.ToList();
+
+            var joinQuery =
+                from person in persons
+                join job in jobs on person.MjestoRodjenja equals job.Town
+                select new {Name = person.Name, MyJob = job.Job};
+
+            return Ok(joinQuery.ToList());
+        }
+        /// <summary>
+        /// sortiranje imena po karakteru i duzini imena
+        /// </summary>
+        /// <returns>list</returns>
+        [HttpGet("sort")]
+        public IActionResult SortByChar()
+        {
+            var persons = _context.Zadataks.ToList();
+            var personsQuery =
+                from person in persons
+                orderby person.Name[0]
+                group person by person.Name[0]
+                into pName
+                select new
+                {
+                    Chahr = pName.Key,
+                    broj = pName.Count(),
+                    Osobe = from p in pName 
+                        orderby p.Name.Length
+                            select p.Name
+
+                };
+            int count = personsQuery.Count();
+            return Ok(personsQuery.ToList());
+
+        }
+        /// <summary>
+        /// Akcija izlistava imena osoba koje se bave istim poslovima
+        /// </summary>
+        /// <returns>list</returns>
+        [HttpGet("connectbyfk")]
+        public IActionResult GetByFkAgain()
+        {
+            var persons = _context.Zadataks;
+            var jobs = _context.PersonJobs;
+
+            var joinQuery =
+                from job in jobs
+                join person in persons on job.Id equals person.JobId into jobPersons
+                select new { Job = job.Job, Osobe = (from p in jobPersons select p.Name)};
+                
+
+            //return Ok(joinQuery.ToLookup(x => x.PersonJob, x => new {x.PersonName, x.PersonSurname}));
+            return Ok(joinQuery.ToList());
+        }
+        
+        [HttpGet("grupbytown")]
+        public IActionResult GroupByCity()
+        {
+            var persons = _context.Zadataks;
+            var personsQuery =
+                from person in persons
+                group person by person.MjestoRodjenja
+                into cityGroup
+                select new {City = cityGroup.Key, Osoba = (from p in cityGroup select (p.Name + " " +p.Prezime))};
+            return Ok(personsQuery.ToList());
 
 
+        }
+        /*
+        [HttpGet("jobs")]
+        public IActionResult GetPersonJobs()
+        {
+
+        }
+        */
     }
 
     

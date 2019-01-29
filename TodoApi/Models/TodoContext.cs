@@ -20,13 +20,21 @@ namespace TodoApi.Models
         public DbSet<TodoItem> TodoItems { get; set; }
         public DbSet<Zadatak> Zadataks { get; set; }
         public DbSet<City> Cities { get; set; }
+        public DbSet<PersonJob> PersonJobs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            var jsonString = File.ReadAllText("users2.json");
+            var jsonString = File.ReadAllText("users5.json");
             var list = JsonConvert.DeserializeObject<List<Zadatak>>(jsonString);
             modelBuilder.Entity<Zadatak>().HasData(list);
+
+            base.OnModelCreating(modelBuilder);
+            var jsonString2 = File.ReadAllText("job6.json");
+            var list2 = JsonConvert.DeserializeObject<List<PersonJob>>(jsonString2);
+            modelBuilder.Entity<PersonJob>().HasData(list2);
         }
+
+        
     }
 }

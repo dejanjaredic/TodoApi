@@ -19,7 +19,7 @@ namespace TodoApi.Models
         {
             get
             {
-                var jsonLoad = File.ReadAllText("users2.json");
+                var jsonLoad = File.ReadAllText("users5.json");
                 var list = JsonConvert.DeserializeObject<List<Zadatak>>(jsonLoad);
                 return list;
             }
@@ -32,6 +32,7 @@ namespace TodoApi.Models
         public DateTime DatumRodjenja { get; set; }
         public string MjestoRodjenja { get; set; }
         public string Email { get; set; }
+        public int JobId { get; set; }
 
         
 
