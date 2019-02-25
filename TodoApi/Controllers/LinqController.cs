@@ -329,17 +329,19 @@ namespace TodoApi.Controllers
             var personQuery =
                 from p in person
                 group p by p.MjestoRodjenja;
-
+            List<string> result = new List<string>();
             foreach (var x in personQuery)
             {
-                Debug.WriteLine(x.Key);
+                //Debug.WriteLine(x.Key);
+                result.Add(x.Key);
                 foreach (var y in x)
                 {
-                    Debug.WriteLine(y.Name);
+                    //Debug.WriteLine(y.Name);
+                    result.Add(" {0}"+y.Name);
                 }
             }
 
-            return Ok(personQuery.ToList());
+            return Ok(result.ToList());
         }
         /// <summary>
         /// izbacuje imena kojih ima vise od broja koji unesemo 
@@ -449,6 +451,15 @@ namespace TodoApi.Controllers
 
 
         }
+
+        [HttpGet("groupbytovnlambda")]
+        public IActionResult GroupByCityUsingLambda()
+        {
+            var peoples = _context.Zadataks;
+            var peoplesQuery = peoples.GroupBy(people => people.MjestoRodjenja)
+                .Select(p => new {FromCity = p.Key, Osoba = p.Select(n => n.Name+" "+n.Prezime)});
+            return Ok(peoplesQuery.ToList());
+        }
         
         [HttpGet("jobsgroups")]
         public IActionResult GetPersonJobs()
@@ -461,7 +472,7 @@ namespace TodoApi.Controllers
                 .GroupBy(x => x.Job)
                 .Select(x => new
                     {Job = x.Key, Users = x.Select(user => user.Person)});
-
+            return Ok(lambdaQuery.ToList());
             ////var groupQuery =
             ////    from job in jobs
             ////    join person in persons on job.Id equals person.JobId
@@ -474,7 +485,7 @@ namespace TodoApi.Controllers
             ////            select i.Person.Name
             ////    };
 
-            return Ok(lambdaQuery.ToList());
+            ///    return Ok(lambdaQuery.ToList());
         }
         /*
         int prvaFunkcija(PersonJob x)
@@ -494,6 +505,46 @@ namespace TodoApi.Controllers
                 {Job = job.Job, Person = person.Name + " " + person.Prezime};
         }
         */
+        /// <summary>
+        /// Pretraga osobe po imenu i izbacivanje imena i prezimena te osobe Koriscenjem Lambda Expresion
+        /// </summary>
+        /// <param name="name">ime</param>
+        /// <returns>List</returns>
+        [HttpGet("lambdaexpresion/{name}")]
+        public IActionResult LambdaExample(string name)
+        {
+            var persons = _context.Zadataks;
+            var personsQuery = persons.Where(person => person.Name == name).Select(p => p.Name +" "+p.Prezime);
+            return Ok(personsQuery.ToList());
+        }
+        /// <summary>
+        /// Grupisanje osoba po prvom slovu imena i sortiranje po duzini njihovih imena pomocu Lambda Expresion
+        /// </summary>
+        /// <returns>List</returns>
+        [HttpGet("getcharvithlambda")]
+        public IActionResult GetNames()
+        {
+            var persons = _context.Zadataks;
+            var personsQuery = persons.OrderBy(person => person.Name[0]).GroupBy(p => p.Name[0])
+                .Select(p => new {Char = p.Key, Broj = p.Count(), User = p.Select(user => user.Name).OrderBy(o => o.Length)});
+            return Ok(personsQuery.ToList());
+        }
+
+        /// <summary>
+        /// Grupisanje imena po godini rodjenja
+        /// </summary>
+        /// <returns>List</returns>
+        [HttpGet("SortByYear")]
+        public IActionResult ByYear()
+        {
+            var persons = _context.Zadataks;
+            var personsQuery =
+                persons.GroupBy(n => n.DatumRodjenja)
+                    .Select(x => new {Godina = x.Key, Zbir=x.Count(), Ime = x.Select(g => g.Name +" "+ g.Prezime).OrderBy(s => s.Length)});
+            return Ok(personsQuery.ToList());
+        }
+
+
     }
 
     
